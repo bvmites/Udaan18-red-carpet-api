@@ -1,10 +1,11 @@
 const router = require('express').Router();
-const voteSchema = new require('../schema/red_carpet');
+const voteSchema = new require('../schema/redCarpet');
 
 const Validator = require('jsonschema').Validator;
 const validator = new validator();
 
 module.exports = (db) => {
+
     const redCarpet = require('../db/redCarpet')(db);
 
     router.post('/categories', async (request, response) => {
@@ -31,5 +32,12 @@ module.exports = (db) => {
         response.json({votes});
     });
 
+    router.get('/votes/:categoryId', async (request, response) => {
+        const categoryId = request.params.id;
+        const result = redCarpet.getVotes(categoryId);
+        response.json(result);
+    });
+
     return router;
+
 };
