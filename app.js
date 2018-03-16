@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const dotenv = require('dotenv');
 
-var index = require('./api/index');
+const index = require('./api/index');
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 dotenv.config();
 
