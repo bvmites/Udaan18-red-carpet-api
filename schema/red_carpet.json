@@ -1,0 +1,14 @@
+{
+  "type": "array",
+  "items":{
+    "type": "object",
+    "properties": {
+      "category_id": {
+        "type": "string"
+      },
+      "nominee_id": {
+        "type": "string"
+      }
+    }
+  }
+}
