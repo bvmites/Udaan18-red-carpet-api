@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const debug = require('debug')('red-carpet:server');
 const http = require('http');
 
-const index = require('./api');
+const index = require('./api/index');
 
 const app = express();
 const port = process.env.PORT || 3000;

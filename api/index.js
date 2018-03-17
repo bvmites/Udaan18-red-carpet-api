@@ -16,29 +16,37 @@ module.exports = (db, io) => {
             response.status(200).json({success: true});
         }
         catch(e){
-            console.log("error");
+            console.log("Error!");
         }
     });
 
     router.post('/nominees/:categoryId', async (request, response) => {
-        const {categoryId} = request.params;
-        const nominees = request.body;
-        const result = await redCarpet.addNominees(categoryId, nominees);
-        if (result.result.n === 0) {
-            response.status(404).json({message: 'Category doesn\'t exist'});
+        try{
+            const {categoryId} = request.params;
+            const nominees = request.body;
+            const result = await redCarpet.addNominees(categoryId, nominees);
+            if (result.result.n === 0) {
+                response.status(404).json({message: 'Category doesn\'t exist'});
+            }
+            else {
+                response.status(200).json({success: true});
+            }
         }
-        else {
-            response.status(200).json({success: true});
+        catch(e) {
+            console.log("Error!");
         }
     });
 
     router.post('/votes', async (request, response) => {
+        console.log('votes');
         try{
             const votes = request.body;
             const result = await redCarpet.addVotes(votes);
+            console.log(result.result);
             response.status(200).json({success: true});
         }catch(e){
-            console.log("error");
+            console.log("Error!");
+            console.log(e);
         }
     });
 
@@ -47,15 +55,20 @@ module.exports = (db, io) => {
             const votes = await redCarpet.getAllVotes();
             response.json({votes});
         }catch(e){
-            console.log("error")
+            console.log("Error!")
         }
 
     });
 
     router.get('/votes/:categoryId', async (request, response) => {
-        const categoryId = request.params.id;
-        const result = redCarpet.getVotes(categoryId);
-        response.json(result);
+        try{
+            const categoryId = request.params.id;
+            const result = redCarpet.getVotes(categoryId);
+            response.json(result);
+        }catch (e){
+            console.log("Error!");
+        }
+
     });
 
     return router;

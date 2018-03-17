@@ -8,18 +8,18 @@ module.exports = (db) => ({
     },
 
     addNominees: (categoryId, nominees) => {
-        return db.collection('nominees').insertMany(nominees.map(n => ({...n, categoryId})));
+        return db.collection('nominees').insertMany(nominees.map(n => ({...n, categoryId:ObjectId(categoryId)})));
     },
 
     addVotes: (votes) => {
         const filter = votes.map(v => {
             return {
-                _id: v.nomineeId,
-                categoryId: v.categoryId
+                _id:ObjectId(v.nomineeId) ,
+                categoryId:ObjectId(v.categoryId)
             }
         });
-        const ans = db.collection('nominees').updateOne(
-            filter,
+        return db.collection('nominees').updateOne(
+            {$or: filter},
             {$inc: {votes: 1}}
         );
     },
