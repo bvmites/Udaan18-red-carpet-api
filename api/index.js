@@ -2,9 +2,9 @@ const router = require('express').Router();
 const voteSchema = new require('../schema/redCarpet');
 
 const Validator = require('jsonschema').Validator;
-const validator = new validator();
+const validator = new Validator();
 
-module.exports = (db) => {
+module.exports = (db, io) => {
 
     const redCarpet = require('../db/redCarpet')(db);
 
@@ -18,12 +18,20 @@ module.exports = (db) => {
         const {categoryId} = request.params;
         const nominees = request.body;
         const result = await redCarpet.addNominees(categoryId, nominees);
-        response.status(200).json({success: true});
+        if (result.result.n === 0) {
+            response.status(404).json({message: 'Category doesn\'t exist'});
+        }
+        else {
+            response.status(200).json({success: true});
+        }
     });
 
     router.post('/votes', async (request, response) => {
         const votes = request.body;
         const result = await redCarpet.addVotes(votes);
+
+        //TODO emit IO
+        
         response.status(200).json({success: true});
     });
 
