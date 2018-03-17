@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const voteSchema = new require('../schema/redCarpet');
+const voteSchema = require("../schema/redCarpet");
 
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
@@ -9,9 +9,15 @@ module.exports = (db, io) => {
     const redCarpet = require('../db/redCarpet')(db);
 
     router.post('/categories', async (request, response) => {
-        const category = request.body;
-        const result = await redCarpet.addCategory(category);
-        response.status(200).json({success: true});
+        console.log(request.body);
+        try{
+            const category = request.body;
+            const result = await redCarpet.addCategory(category);
+            response.status(200).json({success: true});
+        }
+        catch(e){
+            console.log("error");
+        }
     });
 
     router.post('/nominees/:categoryId', async (request, response) => {
@@ -27,17 +33,23 @@ module.exports = (db, io) => {
     });
 
     router.post('/votes', async (request, response) => {
-        const votes = request.body;
-        const result = await redCarpet.addVotes(votes);
-
-        //TODO emit IO
-        
-        response.status(200).json({success: true});
+        try{
+            const votes = request.body;
+            const result = await redCarpet.addVotes(votes);
+            response.status(200).json({success: true});
+        }catch(e){
+            console.log("error");
+        }
     });
 
     router.get('/votes', async (request, response) => {
-        const votes = await redCarpet.getAllVotes();
-        response.json({votes});
+        try{
+            const votes = await redCarpet.getAllVotes();
+            response.json({votes});
+        }catch(e){
+            console.log("error")
+        }
+
     });
 
     router.get('/votes/:categoryId', async (request, response) => {

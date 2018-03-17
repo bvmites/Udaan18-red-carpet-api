@@ -3,6 +3,7 @@ const ObjectId = require('mongodb').ObjectId;
 module.exports = (db) => ({
 
     addCategory: ({name}) => {
+        console.log('A');
         return db.collection('categories').insertOne({name});
     },
 

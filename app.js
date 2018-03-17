@@ -16,15 +16,16 @@ const io = require('socket.io')(server).of('/charts');
 server.listen(port);
 
 app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 dotenv.config();
 
 (async () => {
     try {
-        const client = await MongoClient.connect(process.env.DB);
-        const db = client.db;
-        console.log('Connected to database.');
-        app.use('/redcarpet', index(db, io));
+        const client = await MongoClient.connect("mongodb://localhost/");
+        const db = client.db('new_rc');
+        console.log('Connectd to database.');
+        app.use('/',index(db));
         app.use(function (req, res, next) {
             let err = new Error('Not Found');
             err.status = 404;

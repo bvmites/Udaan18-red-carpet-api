@@ -1,0 +1,21 @@
+{
+  "type": "array",
+  "items": {
+    "_id": {
+      "type": "string"
+    },
+    "category_id": {
+      "type": "string"
+    },
+    "nomineeName": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "votes": {
+      "type": "number",
+      "default": 0
+    }
+  }
+}
