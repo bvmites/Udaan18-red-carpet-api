@@ -9,9 +9,11 @@ module.exports = (db) => {
     // POST /users/create
     router.post('/create', async (request, response) => {
         try {
+
             const {username, password} = request.body;
             const result = await User.create({username, password});
             response.status(200).json({message: 'User created.'});
+
         } catch (e) {
             response.status(500).json({message: e.message});
         }
@@ -39,7 +41,10 @@ module.exports = (db) => {
             if (result.password.hash === hashPassword(password, result.password.salt, result.password.iterations)) {
                 const payload = {
                     user: {
-                        username
+                        username: result._id,
+                        isAdmin: result.isAdmin,
+                        voted: result.voted,
+                        userId: result._id
                     }
                 };
                 const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRATION_TIME});

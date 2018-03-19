@@ -18,7 +18,7 @@ module.exports = (db) => ({
                 categoryId: ObjectId(v.categoryId)
             }
         });
-        db.collection('users').updateOne({_id: ObjectId(userId)}, {$set: {voted: true}});
+        db.collection('users').updateOne({_id: userId}, {$set: {voted: true}});
         return db.collection('nominees').updateOne(
             {$or: filter},
             {$inc: {votes: 1}}

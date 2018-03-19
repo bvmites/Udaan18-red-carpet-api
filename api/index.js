@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const voteSchema = require('../schema/redCarpet');
 
+const votes = require('../middleware/votesCheck');
+
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
 
@@ -11,9 +13,15 @@ module.exports = (db, io) => {
     router.post('/categories', async (request, response) => {
         console.log(request.body);
         try {
-            const category = request.body;
-            const result = await redCarpet.addCategory(category);
-            response.status(200).json({success: true});
+            // console.log(request.user);
+
+            if (request.user.isAdmin === true) {
+                const category = request.body;
+                const result = await redCarpet.addCategory(category);
+                response.status(200).json({success: true});
+            } else {
+                response.sendStatus(401).json({message: "Sorry! you are not Admin"})
+            }
         }
         catch (e) {
             console.log("Error!");
@@ -22,14 +30,18 @@ module.exports = (db, io) => {
 
     router.post('/nominees/:categoryId', async (request, response) => {
         try {
-            const {categoryId} = request.params;
-            const nominees = request.body;
-            const result = await redCarpet.addNominees(categoryId, nominees);
-            if (result.result.n === 0) {
-                response.status(404).json({message: 'Category doesn\'t exist'});
-            }
-            else {
-                response.status(200).json({success: true});
+            if (request.user.isAdmin === true) {
+                const {categoryId} = request.params;
+                const nominees = request.body;
+                const result = await redCarpet.addNominees(categoryId, nominees);
+                if (result.result.n === 0) {
+                    response.status(404).json({message: 'Category doesn\'t exist'});
+                }
+                else {
+                    response.status(200).json({success: true});
+                }
+            } else {
+                response.sendStatus(401).json({message: "Sorry! you are not Admin"});
             }
         }
         catch (e) {
@@ -37,12 +49,13 @@ module.exports = (db, io) => {
         }
     });
 
-    router.post('/votes', async (request, response) => {
-        console.log('votes');
+    router.post('/votes', votes, async (request, response) => {
+        // console.log('votes');
         try {
             const votes = request.body;
-            const result = await redCarpet.addVotes(votes);
-            console.log(result.result);
+            console.log(request.user);
+            const result = await redCarpet.addVotes(votes, request.user.userId);
+            // console.log(result.result);
             response.status(200).json({success: true});
         } catch (e) {
             console.log("Error!");
