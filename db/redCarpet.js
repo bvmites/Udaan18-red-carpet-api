@@ -19,7 +19,7 @@ module.exports = (db) => ({
             }
         });
         db.collection('users').updateOne({_id: userId}, {$set: {voted: true}});
-        return db.collection('nominees').updateOne(
+        return db.collection('nominees').updateMany(
             {$or: filter},
             {$inc: {votes: 1}}
         );

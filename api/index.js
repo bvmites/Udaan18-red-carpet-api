@@ -63,27 +63,6 @@ module.exports = (db, io) => {
         }
     });
 
-    router.get('/votes', async (request, response) => {
-        try {
-            const votes = await redCarpet.getAllVotes();
-            response.json({votes});
-        } catch (e) {
-            console.log("Error!")
-        }
-
-    });
-
-    router.get('/votes/:categoryId', async (request, response) => {
-        try {
-            const categoryId = request.params.id;
-            const result = redCarpet.getVotes(categoryId);
-            response.json(result);
-        } catch (e) {
-            console.log("Error!");
-        }
-
-    });
-
     return router;
 
 };
