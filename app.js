@@ -7,6 +7,7 @@ const http = require('http');
 
 const index = require('./api/index');
 const user = require('./api/user');
+const data = require('./utils/generateData');
 const auth = require('./middleware/auth');
 
 const app = express();
@@ -27,8 +28,10 @@ dotenv.config();
         const client = await MongoClient.connect(process.env.DB);
         const db = client.db('red-carpet');
         console.log('Connected to database.');
+        app.use('/redcarpet', data(db));
         app.use('/user', user(db));
         app.use('/', auth, index(db));
+
         app.use(function (req, res, next) {
             let err = new Error('Not Found');
             err.status = 404;

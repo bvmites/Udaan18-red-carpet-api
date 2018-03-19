@@ -2,6 +2,7 @@ const router = require('express').Router();
 const voteSchema = require('../schema/redCarpet');
 
 const votes = require('../middleware/votesCheck');
+// const data = require('../utils/generateData');
 
 const Validator = require('jsonschema').Validator;
 const validator = new Validator();
