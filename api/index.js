@@ -12,7 +12,7 @@ module.exports = (db, io) => {
         for (let v of voteSummary) {
             voteSummaryWithKeys[v.categoryId] = v.votes;
         }
-        io.emit('vote', voteSummaryWithKeys);
+        io.emit('init', voteSummaryWithKeys);
     });
 
     router.post('/categories', async (request, response) => {
