@@ -1,7 +1,15 @@
+const Validator = require('jsonschema').Validator;
+const validator = new Validator();
+
+const voteSchema = require('../schema/vote');
+
 module.exports = (request, response, next) => {
     try {
         const votes = request.body;
-        let result = {};
+        if (!validator.validate(votes, voteSchema).valid) {
+            throw new Error();
+        }
+        const result = {};
         let flag = false;
         votes.forEach((i) => {
             if (result.hasOwnProperty(i.categoryId)) {

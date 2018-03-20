@@ -37,6 +37,15 @@ module.exports = (db) => ({
                 {$group: {_id: '$categoryId', nominees: {$push: '$$ROOT'}}}
             ])
             .toArray();
+    },
+
+    getVoteSummary: () => {
+        return db.collection('nominees')
+            .aggregate([
+                {$group: {_id: '$categoryId', votes: {$push: '$votes'}}},
+                {$project: {categoryId: '$_id', votes: '$votes', _id: false}}
+            ])
+            .toArray();
     }
 
 });

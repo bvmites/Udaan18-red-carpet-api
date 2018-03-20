@@ -17,7 +17,6 @@ module.exports = (db) => {
         } catch (e) {
             response.status(500).json({message: e.message});
         }
-
     });
 
     // POST /users/login
@@ -56,7 +55,6 @@ module.exports = (db) => {
                 throw error;
             }
         } catch (e) {
-            console.log(e);
             if (e.code === 'MissingCredentials') {
                 response.status(400);
             }
