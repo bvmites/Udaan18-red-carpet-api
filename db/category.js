@@ -17,13 +17,13 @@ module.exports = (db) => ({
         const answer = result.map(category => {
             const categoryId = category._id;
             const foundCategory = categories.find((c) => c._id.toString() === categoryId.toString());
-            console.log(foundCategory);
+            // console.log(foundCategory);
             if (foundCategory) {
                 return {...category, name: foundCategory.name};
             }
             return category;
         });
-        console.log(answer);
+        // console.log(answer);
         return answer;
     }
 });
