@@ -7,12 +7,12 @@ module.exports = (db) => {
 
     router.get('/votes', async(request, response) => {
         try{
-            const categoryId = request.body;
-            let result = category.getCategories(categoryId);
-            response.status(200).json(result.stringify);
+            let result = await category.getCategories();
+            response.status(200).json(result);
         }catch(e) {
             console.log("Error!");
             response.status(404).json({message:e.message});
         }
     });
+    return router;
 };
