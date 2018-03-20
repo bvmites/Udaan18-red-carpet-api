@@ -6,6 +6,15 @@ module.exports = (db, io) => {
 
     const redCarpet = require('../db/redCarpet')(db);
 
+    io.on('connection', async () => {
+        const voteSummary = await redCarpet.getVoteSummary();
+        const voteSummaryWithKeys = {};
+        for (let v of voteSummary) {
+            voteSummaryWithKeys[v.categoryId] = v.votes;
+        }
+        io.emit('vote', voteSummaryWithKeys);
+    });
+
     router.post('/categories', async (request, response) => {
         try {
             if (request.user.isAdmin === true) {
