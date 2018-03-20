@@ -9,7 +9,7 @@ module.exports = (db) => ({
             '$group': {
                 "_id": "$categoryId",
                 // "name": "",
-                "nominees": {$push: {"id": "$_id", "name": "$nomineeName", "imgUrl": "$imageUrl"}}
+                "nominees": {$push: {"_id": "$_id", "name": "$nomineeName", "imgUrl": "$imageUrl"}}
             }
         }]).toArray();
         const categories = await db.collection('categories').find({}).toArray();
@@ -19,7 +19,7 @@ module.exports = (db) => ({
             const foundCategory = categories.find((c) => c._id.toString() === categoryId.toString());
             // console.log(foundCategory);
             if (foundCategory) {
-                return {...category, name: foundCategory.name};
+                return {...category, title: foundCategory.name};
             }
             return category;
         });

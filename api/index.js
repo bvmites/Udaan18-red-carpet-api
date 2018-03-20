@@ -49,7 +49,11 @@ module.exports = (db, io) => {
             const result = await redCarpet.addVotes(votes, request.user.userId);
             response.status(200).json({success: true});
             const voteSummary = await redCarpet.getVoteSummary();
-            io.emit('vote', voteSummary);
+            const voteSummaryWithKeys = {};
+            for (let v of voteSummary) {
+                voteSummaryWithKeys[v.categoryId] = v.votes;
+            }
+            io.emit('vote', voteSummaryWithKeys);
         } catch (e) {
             response.status(500).json({message: e.message});
         }

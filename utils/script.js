@@ -4,17 +4,15 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const Client = Mongoclient.connect(process.env.DB, async (error,client)=>{
-    if(error){
+Mongoclient.connect(process.env.DB, async (error, client) => {
+    if (error) {
         console.log("Error!");
-    }else{
+    } else {
         db = client.db('red-carpet');
         const data = require('../db/category')(db);
         const result = await data.getCategories();
-        let file = fs.writeFileSync('./File.json',JSON.stringify(result));
+        let file = fs.writeFileSync('./data.json', JSON.stringify(result));
     }
-    // db = client.db('red-carpet');
-    // const data = require('../db/category')(db);
-    // const result = data.getCategories();
-    // let file = fs.writeFileSync('./File.json',result);
+    console.log('Done');
+    process.exit(0);
 });

@@ -11,7 +11,7 @@ const data = require('./utils/generateData');
 const auth = require('./middleware/auth');
 
 const app = express();
-app.use(cors({credentials: true, origin: 'http://localhost:63342'}));
+app.use(cors());
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = require('socket.io')(server).of('/charts');
