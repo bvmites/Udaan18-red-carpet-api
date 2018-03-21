@@ -8,11 +8,7 @@ module.exports = (db, io) => {
 
     io.on('connection', async () => {
         const voteSummary = await redCarpet.getVoteSummary();
-        const voteSummaryWithKeys = {};
-        for (let v of voteSummary) {
-            voteSummaryWithKeys[v.categoryId] = v.votes;
-        }
-        io.emit('init', voteSummaryWithKeys);
+        io.emit('init', voteSummary);
     });
 
     router.post('/categories', async (request, response) => {
@@ -58,11 +54,7 @@ module.exports = (db, io) => {
             const result = await redCarpet.addVotes(votes, request.user.userId);
             response.status(200).json({success: true});
             const voteSummary = await redCarpet.getVoteSummary();
-            const voteSummaryWithKeys = {};
-            for (let v of voteSummary) {
-                voteSummaryWithKeys[v.categoryId] = v.votes;
-            }
-            io.emit('vote', voteSummaryWithKeys);
+            io.emit('vote', voteSummary);
         } catch (e) {
             response.status(500).json({message: e.message});
         }
