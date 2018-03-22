@@ -10,7 +10,7 @@ module.exports = (db) => {
     router.post('/create', async (request, response) => {
         try {
             const {username, password} = request.body;
-            const result = await User.create({username, password});
+            const result = await User.create({username, password, voted: false, isAdmin: false});
             response.status(200).json({message: 'User created.'});
 
         } catch (e) {
