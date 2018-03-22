@@ -7,6 +7,7 @@ module.exports = (request, response, next) => {
     try {
         const votes = request.body;
         if (!validator.validate(votes, voteSchema).valid) {
+            console.log('invalid sc');
             throw new Error();
         }
         const result = {};

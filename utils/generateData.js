@@ -1,18 +1,18 @@
-const router = require('express').Router();
+const fs = require('fs');
+const Mongoclient = require('mongodb').MongoClient;
+const dotenv = require('dotenv');
 
+dotenv.config();
 
-module.exports = (db) => {
-
-    const category = require('../db/category')(db);
-
-    router.get('/votes', async(request, response) => {
-        try{
-            let result = await category.getCategories();
-            response.status(200).json(result);
-        }catch(e) {
-            console.log("Error!");
-            response.status(404).json({message:e.message});
-        }
-    });
-    return router;
-};
+Mongoclient.connect(process.env.DB, async (error, client) => {
+    if (error) {
+        console.log("Error!");
+    } else {
+        db = client.db('red-carpet');
+        const data = require('../db/category')(db);
+        const result = await data.getCategories();
+        let file = fs.writeFileSync('./data.json', JSON.stringify(result));
+    }
+    console.log('Done');
+    process.exit(0);
+});

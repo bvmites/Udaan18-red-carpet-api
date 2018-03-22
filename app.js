@@ -7,7 +7,6 @@ const cors = require('cors');
 
 const index = require('./api/index');
 const user = require('./api/user');
-const data = require('./utils/generateData');
 const auth = require('./middleware/auth');
 
 const app = express();
@@ -25,7 +24,6 @@ require('dotenv').config();
         const client = await MongoClient.connect(process.env.DB);
         const db = client.db('red-carpet');
         console.log('Connected to database.');
-        app.use('/redcarpet', data(db));
         app.use('/user', user(db));
         app.use('/', auth, index(db, io));
 

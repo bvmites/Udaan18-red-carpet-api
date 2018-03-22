@@ -9,7 +9,6 @@ module.exports = (db) => {
     // POST /users/create
     router.post('/create', async (request, response) => {
         try {
-
             const {username, password} = request.body;
             const result = await User.create({username, password});
             response.status(200).json({message: 'User created.'});
@@ -21,6 +20,7 @@ module.exports = (db) => {
 
     // POST /users/login
     router.post('/login', async (request, response) => {
+        console.log('login', request.body);
         try {
             const {username, password} = request.body;
             const result = await User.get(username);
@@ -38,6 +38,11 @@ module.exports = (db) => {
             }
 
             if (result.password.hash === hashPassword(password, result.password.salt, result.password.iterations)) {
+
+                if (result.voted) {
+                    return response.status(403).json({message: 'You have already voted.'});
+                }
+
                 const payload = {
                     user: {
                         username: result._id,

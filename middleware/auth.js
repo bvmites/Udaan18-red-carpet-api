@@ -6,7 +6,7 @@ module.exports = (request, response, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         request.user = decoded.user;
         if (request.user.voted) {
-            throw new Error;
+            return response.status(403).json({message: 'You have already voted.'});
         }
         next();
     }

@@ -1,6 +1,8 @@
 const router = require('express').Router({});
 const voteSchema = require('../schema/vote');
 const validateVotes = require('../middleware/validateVotes');
+const authorizeAdmin = require('../middleware/authorizeAdmin');
+const checkVoteStatus = require('../middleware/checkVoteStatus');
 
 module.exports = (db, io) => {
 
@@ -11,46 +13,33 @@ module.exports = (db, io) => {
         io.emit('init', voteSummary);
     });
 
-    router.post('/categories', async (request, response) => {
+    router.post('/categories', authorizeAdmin, async (request, response) => {
         try {
-            if (request.user.isAdmin === true) {
-                const category = request.body;
-                const result = await redCarpet.addCategory(category);
-                response.status(200).json({success: true});
-            } else {
-                response.status(401).json({message: "Sorry! you are not Admin"})
-            }
-        }
-        catch (e) {
-            response.status(403).json({message: 'forbidden'});
-        }
-    });
-
-    router.post('/nominees/:categoryId', async (request, response) => {
-        try {
-            if (request.user.isAdmin === true) {
-                const {categoryId} = request.params;
-                const nominees = request.body;
-                const result = await redCarpet.addNominees(categoryId, nominees);
-                if (result.result.n === 0) {
-                    response.status(404).json({message: 'Category doesn\'t exist'});
-                }
-                else {
-                    response.status(200).json({success: true});
-                }
-            } else {
-                response.sendStatus(403).json({message: "forbidden"});
-            }
+            const category = request.body;
+            const result = await redCarpet.addCategory(category);
+            response.status(200).json({success: true});
         }
         catch (e) {
             response.status(500).json({message: e.message});
         }
     });
 
-    router.post('/votes', validateVotes, async (request, response) => {
+    router.post('/nominees/:categoryId', authorizeAdmin, async (request, response) => {
+        try {
+            const {categoryId} = request.params;
+            const nominees = request.body;
+            const result = await redCarpet.addNominees(categoryId, nominees);
+            response.status(200).json({success: true});
+        }
+        catch (e) {
+            response.status(500).json({message: e.message});
+        }
+    });
+
+    router.post('/votes', validateVotes, checkVoteStatus(db), async (request, response) => {
+        console.log('votes', request.body);
         try {
             const votes = request.body;
-            console.log(request.user);
             const result = await redCarpet.addVotes(votes, request.user.userId);
             response.status(200).json({success: true});
             const voteSummary = await redCarpet.getVoteSummary();
