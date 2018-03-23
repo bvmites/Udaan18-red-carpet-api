@@ -8,8 +8,8 @@ module.exports = (db) => {
 
     router.post('/', auth, validateFeedback, async (request, response) => {
         try {
-            const {name, stars, message} = request.body;
-            const result = await feedback.add({name, stars, message});
+            const {name, rating, comment} = request.body;
+            const result = await feedback.add({name, rating, comment});
             response.status(200).json({success: true});
         } catch (e) {
             response.status(500).json({message: e.message})
