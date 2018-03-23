@@ -10,9 +10,11 @@ module.exports = (db) => {
     router.post('/create', async (request, response) => {
         try {
             const {username, password} = request.body;
+            if (!username || !password) {
+                return response.status(400).json({message: 'Invalid input.'});
+            }
             const result = await User.create({username, password, voted: false, isAdmin: false});
             response.status(200).json({message: 'User created.'});
-
         } catch (e) {
             response.status(500).json({message: e.message});
         }
@@ -20,21 +22,16 @@ module.exports = (db) => {
 
     // POST /users/login
     router.post('/login', async (request, response) => {
-        console.log('login', request.body);
         try {
             const {username, password} = request.body;
             const result = await User.get(username);
             const error = new Error();
             if (!(username && password)) {
-                error.message = 'Invalid request';
-                error.code = 'MissingCredentials';
-                throw error;
+                return response.status(400).json({message: 'Invalid input.'});
             }
 
             if (result === null) {
-                error.message = 'Invalid username or password';
-                error.code = 'UserDoesntExist';
-                throw error;
+                return response.status(401).json({message: 'Invalid username or password.'});
             }
 
             if (result.password.hash === hashPassword(password, result.password.salt, result.password.iterations)) {
@@ -55,21 +52,10 @@ module.exports = (db) => {
                 response.status(200).json({token});
             }
             else {
-                error.message = 'Invalid username or password';
-                error.code = 'InvalidCredentials';
-                throw error;
+                return response.status(401).json({message: 'Invalid username or password.'});
             }
         } catch (e) {
-            if (e.code === 'MissingCredentials') {
-                response.status(400);
-            }
-            else if (e.code in ['UserDoesntExist', 'InvalidCredentials']) {
-                response.status(401);
-            }
-            else {
-                response.status(500);
-            }
-            response.json({message: e.message});
+            response.status(500).json({message: e.message});
         }
     });
 
