@@ -28,12 +28,7 @@ morgan.token('user', (request, response) => {
 const app = express();
 app.use(cors());
 
-app.use(
-    morgan(
-        ':remote-addr :user [:date[clf]] ":method :url :status ":referrer"',
-        {stream: fs.createWriteStream('./log.log')}
-    )
-);
+app.use(morgan(':remote-addr :user [:date[clf]] ":method :url :status ":referrer"'));
 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
