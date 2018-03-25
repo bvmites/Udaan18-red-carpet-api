@@ -21,11 +21,10 @@ module.exports = (request, response, next) => {
             }
         });
         if (flag) {
-            throw new Error()
+            throw new Error();
         }
         next();
     } catch (e) {
-        console.log("two category ids found");
-        response.status(401).json({message: "Two Category id Found!!!"});
+        response.status(401).json({message: "Invalid input"});
     }
 };
