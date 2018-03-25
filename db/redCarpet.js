@@ -17,7 +17,7 @@ module.exports = (db) => ({
                 categoryId: ObjectId(v.categoryId)
             }
         });
-        await db.collection('users').updateOne({_id: userId}, {$set: {voted: true}});
+        await db.collection('users').insertOne({_id: userId, voted: true});
         return db.collection('nominees').updateMany(
             {$or: filter},
             {$inc: {votes: 1}}
@@ -33,7 +33,12 @@ module.exports = (db) => ({
     getAllVotes: () => {
         return db.collection('votes')
             .aggregate([
-                {$group: {_id: '$categoryId', nominees: {$push: '$$ROOT'}}}
+                {
+                    $group: {
+                        _id: '$categoryId',
+                        nominees: {$push: {name: '$nomineeName', votes: '$votes'}}
+                    }
+                }
             ])
             .toArray();
     },

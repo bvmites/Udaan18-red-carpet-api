@@ -4,7 +4,7 @@ module.exports = (db) => async (request, response, next) => {
         return response.status(403).json({message: 'You have already voted.'});
     }
     const user = await db.collection('users').findOne({_id: username});
-    if (user && !user.voted) {
+    if (!user || (user && !user.voted)) {
         return next();
     }
     response.status(403).json({message: 'You have already voted.'});

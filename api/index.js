@@ -40,7 +40,7 @@ module.exports = (db, io) => {
         console.log('votes', request.body);
         try {
             const votes = request.body;
-            const result = await redCarpet.addVotes(votes, request.user.userId);
+            const result = await redCarpet.addVotes(votes, request.user.username);
             response.status(200).json({success: true});
             const voteSummary = await redCarpet.getVoteSummary();
             io.emit('vote', voteSummary);
