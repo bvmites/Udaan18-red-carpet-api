@@ -40,6 +40,7 @@ require('dotenv').config();
 
 (async () => {
     try {
+
         const client = await MongoClient.connect(process.env.DB);
         const db = client.db('red-carpet-2019');
         console.log('Connected to database.');
