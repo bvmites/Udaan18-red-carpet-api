@@ -24,7 +24,7 @@ module.exports = (db, io) => {
         }
     });
 
-    router.post('/nominees/:categoryId', authorizeAdmin, async (request, response) => {
+    router.post('/nominees/:categoryId', /*authorizeAdmin,*/ async (request, response) => {
         try {
             const {categoryId} = request.params;
             const nominees = request.body;

@@ -14,21 +14,26 @@ const feedback = require('./api/feedback');
 
 const auth = require('./middleware/auth');
 
-morgan.token('user', (request, response) => {
-    try {
-        const token = request.header('Authorization');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return decoded.user ? (decoded.user.username || 'INVALID') : 'INVALID';
-    } catch (e) {
-        console.log(e);
-        return 'INVALID';
-    }
-});
+
+// morgan.token('user', (request, response) => {
+//     try {
+//         const token = request.header('Authorization');
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         return decoded.user ? (decoded.user.username || 'INVALID') : 'INVALID';
+//     } catch (e) {
+//         console.log(e);
+//         return 'INVALID';
+//     }
+// });
 
 const app = express();
 app.use(cors());
 
-app.use(morgan(':remote-addr :user [:date[clf]] ":method :url :status ":referrer"'));
+const logger = require('morgan');
+app.use(logger('dev'));
+
+
+// app.use(morgan(':remote-addr :user [:date[clf]] ":method :url :status ":referrer"'));
 
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);

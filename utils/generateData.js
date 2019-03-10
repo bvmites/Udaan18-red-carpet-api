@@ -9,7 +9,7 @@ Mongoclient.connect(process.env.DB, async (error, client) => {
         console.log("Error!");
     } else {
         try {
-            db = client.db('red-carpet');
+            db = client.db('red-carpet-2019');
             const data = require('../db/category')(db);
             const result = await data.getCategories();
             fs.writeFileSync('./data.json', JSON.stringify(result));
